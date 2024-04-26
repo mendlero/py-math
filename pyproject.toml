@@ -1,0 +1,21 @@
+[project]
+name = "py_math_omm"
+version = "0.0.1"
+description = "A package for a collection of math related function and classes"
+license = { file = "LICENSE" }
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.7"
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/mendlero/py-math"
+Issues = "https://github.com/mendlero/py-math/issues"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
