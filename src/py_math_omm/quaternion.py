@@ -1,5 +1,5 @@
 import math
-from typing import Callable
+from typing import Callable, overload
 
 type real_number = int | float
 type complex_number = real_number | complex
@@ -7,25 +7,32 @@ type quaternion_number = complex_number | Quaternion
 
 type withNone[T] = T | None
 
+
 class Quaternion(object):
-    def __init__(self, r: real_number = 0, i: real_number = 0, j: real_number = 0, k: real_number = 0) -> None:
-        self.r = float(r)
-        self.i = float(i)
-        self.j = float(j)
-        self.k = float(k)
+    @overload
+    def __init__(self, r: real_number = 0, i: real_number = 0,
+                 j: real_number = 0, k: real_number = 0) -> None: ...
 
-    @classmethod
-    def from_number(cls, num: real_number) -> "Quaternion":
-        return cls(num, 0, 0, 0)
+    @overload
+    def __init__(self, r: complex) -> None: ...
 
-    @classmethod
-    def from_complex(cls, num: complex) -> "Quaternion":
-        return cls(num.real, num.imag, 0, 0)
+    @overload
+    def __init__(self, r: tuple[real_number, real_number,
+                 real_number, real_number]) -> None: ...
 
-    @classmethod
-    def from_tuple(cls, nums: tuple[real_number, real_number, real_number, real_number]) -> "Quaternion":
-        r, i, j, k = nums
-        return cls(r, i, j, k)
+    def __init__(self, r: complex_number | tuple[real_number, real_number, real_number, real_number] = 0, i: real_number = 0, j: real_number = 0, k: real_number = 0) -> None:
+        if (isinstance(r, (int, float))):
+            self.r = float(r)
+            self.i = float(i)
+            self.j = float(j)
+            self.k = float(k)
+        elif isinstance(r, complex):
+            self.r = r.real
+            self.i = r.imag
+            self.j = 0
+            self.k = 0
+        else:
+            self.r, self.i, self.j, self.k = r
 
     @property
     def real(self) -> float:
