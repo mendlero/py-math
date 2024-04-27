@@ -189,7 +189,7 @@ class Quaternion(object):
         return not self == other
 
     def __str__(self) -> str:
-        return self.__repr__()
+        return f'Quaternion(r = {self.r}, i = {self.i}, j = {self.j}, k = {self.k})'
 
     def __repr__(self) -> str:
-        return f'Quaternion(r: {self.r}, i: {self.i}, j: {self.j}, k: {self.k})'
+        return f'Quaternion({self.r}, {self.i}, {self.j}, {self.k})'
