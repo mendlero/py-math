@@ -5,8 +5,6 @@ type real_number = int | float
 type complex_number = real_number | complex
 type quaternion_number = complex_number | Quaternion
 
-type withNone[T] = T | None
-
 
 class Quaternion(object):
     @overload
