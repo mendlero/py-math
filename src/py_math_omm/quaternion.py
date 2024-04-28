@@ -37,7 +37,7 @@ class Quaternion(object):
         return self.r
 
     @property
-    def imag(self) -> tuple:
+    def imag(self) -> tuple[float, float, float]:
         return self.i, self.j, self.k
 
     @property
