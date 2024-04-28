@@ -79,7 +79,10 @@ class Vector(Generic[T]):
     def __iter__(self):
         return self.values
 
-    def __eq__(self, other: "Vector[T]") -> bool:
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Vector):
+            return False
+
         if self.length != other.length:
             return False
 
@@ -88,6 +91,9 @@ class Vector(Generic[T]):
                 return False
 
         return True
+
+    def __ne__(self, value: object) -> bool:
+        return not self == value
 
     def __repr__(self) -> str:
         return f'Vector({', '.join(v.__repr__() for v in self.values)})'
