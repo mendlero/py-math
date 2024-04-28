@@ -1,8 +1,7 @@
 import math
 from typing import Callable, overload
+from .types import real_number, complex_number
 
-type real_number = int | float
-type complex_number = real_number | complex
 type quaternion_number = complex_number | Quaternion
 
 
