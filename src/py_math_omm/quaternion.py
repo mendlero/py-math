@@ -65,7 +65,7 @@ class Quaternion(object):
         return self.conjugate() / self.abs2()
 
     def abs2(self) -> float:
-        return self.r * self.r + self.i * self.i + self.j * self.k + self.k * self.k
+        return self.r * self.r + self.i * self.i + self.j * self.j + self.k * self.k
 
     def __create_with_transformation(self, transform: Callable[[float], float]) -> "Quaternion":
         return Quaternion(transform(self.r), transform(self.i), transform(self.j), transform(self.k))
