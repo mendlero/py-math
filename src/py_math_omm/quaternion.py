@@ -177,11 +177,11 @@ class Quaternion(object):
             return (self.r == other.r) and (self.i == other.i) and (self.j == other.j) and (self.k == other.k)
         if isinstance(other, complex):
             if self.is_py_complex:
-                return (self.real == other.real) and (self.imag == other.imag)
+                return (self.r == other.real) and (self.i == other.imag)
         if isinstance(other, (int | float)):
             other = float(other)
             if self.is_real:
-                return self.real == other
+                return self.r == other
         return other.__eq__(self)
 
     def __ne__(self, other) -> bool:
