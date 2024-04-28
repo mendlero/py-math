@@ -1,5 +1,5 @@
 from typing import Iterable, SupportsIndex, TypeVar, Protocol, Generic, overload
-from some_types import withNone
+from .types import withNone
 
 S = TypeVar('S')
 
