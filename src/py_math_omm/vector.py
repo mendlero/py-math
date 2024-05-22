@@ -19,12 +19,13 @@ T = TypeVar('T', bound=VectorElement)
 
 
 class Vector(Generic[T]):
-    def __init__(self, *values: T) -> None:
+    def __init__(self, zero_value: T, *values: T) -> None:
         self.values = list(values)
+        self.zero_value = zero_value
 
     @classmethod
-    def from_iterable(cls, values: Iterable[T]) -> "Vector[T]":
-        return cls(*values)
+    def from_iterable(cls, zero_value: T, values: Iterable[T]) -> "Vector[T]":
+        return cls(zero_value, *values)
 
     @property
     def length(self) -> int:
@@ -55,6 +56,39 @@ class Vector(Generic[T]):
             res += self.values[i] * other.values[i]
 
         return res
+
+    def is_orthogonal(self, other: "Vector[T]", /) -> bool:
+        return self.dot(other) == self.zero_value
+
+    @property
+    def is_zero_vector(self) -> bool: 
+        return self.length == 0
+
+    def is_parralel(self, other: "Vector[T]") -> bool:
+        if self.is_zero_vector or other.is_zero_vector:
+            return True
+
+        if self.length != other.length:
+            return False
+        
+        factor: withNone[T] = None
+
+        for i in range(self.length):
+            val = self[i]
+            other_val = other[i]
+
+            if (val == self.zero_value and other_val != self.zero_value) or (val != self.zero_value and other_val   == self.zero_value):
+                return False
+
+            if val == self.zero_value and other_val == self.zero_value:
+                continue
+
+            if factor == None:
+                factor = val/other_val
+            elif val/other_val != factor:
+                return False
+
+        return True
 
     def __add__(self, other: "Vector[T]", /) -> "Vector[T]":
         length: int = self.length
@@ -107,6 +141,14 @@ class Vector(Generic[T]):
 
     def __getitem__(self, i: SupportsIndex | slice, /) -> T | list[T]:
         return self.values[i]
+    
+    @overload
+    def __setitem__(self, i: SupportsIndex, value: T, /) -> None: ...
+    @overload
+    def __setitem__(self, s: slice, values: Iterable[T], /) -> None: ...
+    
+    def __setitem__(self, key: slice | SupportsIndex, value: T | Iterable[T], /) -> None:
+        self.values[key] = value
 
     def __iter__(self):
         return self.values
