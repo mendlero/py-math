@@ -1,4 +1,4 @@
-from typing import Iterable, SupportsIndex, TypeVar, Protocol, Generic, overload
+from typing import Iterable, SupportsIndex, overload
 from .types import withNone
 from .quaternion import real_number
 import math
@@ -26,15 +26,12 @@ class Vector:
         Args:
             other (Vector): other vector to multiply
 
-        Raises:
-            ValueError: when the vectors are of different lengths
-
         Returns:
-            withNone[float]: None when the two vectors are empty, float when they are not, in such case it returns the dot product between the 2 vectors
+            withNone[float]: None when the two vectors are empty or have different lengths, float when they are not, in such case it returns the dot product between the 2 vectors
         """
 
         if self.length != other.length:
-            raise ValueError("The vectors must be of the same length")
+            return None
 
         if self.length == 0:
             return None
@@ -182,3 +179,7 @@ class Vector:
 
     def __str__(self) -> str:
         return f"({", ".join(v.__str__() for v in self.values)})"
+
+
+v = Vector(1, 2, 3)
+v2 = Vector((i for i in range(5)))

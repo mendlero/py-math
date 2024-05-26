@@ -38,15 +38,12 @@ class GenericVector[T]:
         Args:
             other (GenericVector[T]): other vector to multiply
 
-        Raises:
-            ValueError: when the vectors are of different lengths
-
         Returns:
-            withNone[T]: None when the two vectors are empty, T when they are not, in such case it returns the dot product between the 2 vectors
+            withNone[T]: None when the two vectors are empty or have different lengths, T when they are not, in such case it returns the dot product between the 2 vectors
         """
 
         if self.length != other.length:
-            raise ValueError("The vectors must be of the same length")
+            return None
 
         if self.length == 0:
             return None
