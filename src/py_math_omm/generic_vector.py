@@ -1,7 +1,7 @@
 from typing import Iterable, SupportsIndex, TypeVar, Protocol, Generic, overload
 from .types import withNone
 
-T = TypeVar('T', bound='VectorElement')
+T = TypeVar("T", bound="VectorElement")
 
 
 class VectorElement(Protocol):
@@ -27,6 +27,10 @@ class GenericVector(Generic[T]):
     @property
     def length(self) -> int:
         return len(self.values)
+
+    @property
+    def is_zero_vector(self) -> bool:
+        return self.length == 0 or all((v == self.zero_value for v in self.values))
 
     def dot(self, other: "GenericVector[T]") -> withNone[T]:
         """computes the dot prduct between self and other
@@ -54,12 +58,11 @@ class GenericVector(Generic[T]):
 
         return res
 
+    def abs2(self) -> T:
+        return self.dot(self)
+
     def is_orthogonal(self, other: "GenericVector[T]", /) -> bool:
         return self.dot(other) == self.zero_value
-
-    @property
-    def is_zero_vector(self) -> bool: 
-        return self.length == 0 or all((v == self.zero_value for v in self.values))
 
     def is_parralel(self, other: "GenericVector[T]") -> bool:
         if self.is_zero_vector or other.is_zero_vector:
@@ -74,15 +77,17 @@ class GenericVector(Generic[T]):
             val = self[i]
             other_val = other[i]
 
-            if (val == self.zero_value and other_val != self.zero_value) or (val != self.zero_value and other_val   == self.zero_value):
+            if (val == self.zero_value and other_val != self.zero_value) or (
+                val != self.zero_value and other_val == self.zero_value
+            ):
                 return False
 
             if val == self.zero_value and other_val == self.zero_value:
                 continue
 
             if factor == None:
-                factor = val/other_val
-            elif val/other_val != factor:
+                factor = val / other_val
+            elif val / other_val != factor:
                 return False
 
         return True
@@ -94,7 +99,9 @@ class GenericVector(Generic[T]):
             return other.__add__(self)
 
         new_values_generator = (
-            (self.values[i] + other.values[i] if i < other_length else self.values[i]) for i in range(length))
+            (self.values[i] + other.values[i] if i < other_length else self.values[i])
+            for i in range(length)
+        )
 
         return GenericVector.from_iterable(new_values_generator)
 
@@ -103,12 +110,16 @@ class GenericVector(Generic[T]):
         other_length: int = other.length
         if length < other_length:
             new_values_generator = (
-                (self.values[i] - other.values[i] if i < length else -other.values[i]) for i in range(other_length))
+                (self.values[i] - other.values[i] if i < length else -other.values[i])
+                for i in range(other_length)
+            )
 
             return GenericVector.from_iterable(new_values_generator)
 
         new_values_generator = (
-            (self.values[i] - other.values[i] if i < other_length else self.values[i]) for i in range(length))
+            (self.values[i] - other.values[i] if i < other_length else self.values[i])
+            for i in range(length)
+        )
 
         return GenericVector.from_iterable(new_values_generator)
 
@@ -138,13 +149,16 @@ class GenericVector(Generic[T]):
 
     def __getitem__(self, i: SupportsIndex | slice, /) -> T | list[T]:
         return self.values[i]
-    
+
     @overload
     def __setitem__(self, i: SupportsIndex, value: T, /) -> None: ...
+
     @overload
     def __setitem__(self, s: slice, values: Iterable[T], /) -> None: ...
-    
-    def __setitem__(self, key: slice | SupportsIndex, value: T | Iterable[T], /) -> None:
+
+    def __setitem__(
+        self, key: slice | SupportsIndex, value: T | Iterable[T], /
+    ) -> None:
         self.values[key] = value
 
     def __iter__(self):
@@ -167,7 +181,7 @@ class GenericVector(Generic[T]):
         return not self == value
 
     def __repr__(self) -> str:
-        return f'GenericVector({', '.join(v.__repr__() for v in self.values)})'
+        return f"GenericVector({", ".join(v.__repr__() for v in self.values)})"
 
     def __str__(self) -> str:
-        return f'({', '.join(v.__str__() for v in self.values)})'
+        return f"({", ".join(v.__str__() for v in self.values)})"

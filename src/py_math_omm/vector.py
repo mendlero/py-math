@@ -15,6 +15,10 @@ class Vector:
     def length(self) -> int:
         return len(self.values)
 
+    @property
+    def is_zero_vector(self) -> bool:
+        return self.length == 0 or all((v == self.zero_value for v in self.values))
+
     def dot(self, other: "Vector") -> withNone[float]:
         """computes the dot prduct between self and other
 
@@ -41,12 +45,11 @@ class Vector:
 
         return res
 
+    def abs2(self) -> float:
+        return self.dot(self)
+
     def is_orthogonal(self, other: "Vector", /) -> bool:
         return self.dot(other) == self.zero_value
-
-    @property
-    def is_zero_vector(self) -> bool:
-        return self.length == 0 or all((v == self.zero_value for v in self.values))
 
     def is_parralel(self, other: "Vector") -> bool:
         if self.is_zero_vector or other.is_zero_vector:
@@ -121,6 +124,7 @@ class Vector:
 
     @overload
     def __setitem__(self, i: SupportsIndex, value: float, /) -> None: ...
+
     @overload
     def __setitem__(self, s: slice, values: Iterable[float], /) -> None: ...
 
