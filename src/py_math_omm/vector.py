@@ -1,6 +1,7 @@
 from typing import Iterable, SupportsIndex, TypeVar, Protocol, Generic, overload
 from .types import withNone
 from .quaternion import real_number
+import math
 
 
 class Vector:
@@ -17,7 +18,7 @@ class Vector:
 
     @property
     def is_zero_vector(self) -> bool:
-        return self.length == 0 or all((v == self.zero_value for v in self.values))
+        return self.length == 0 or all((v == 0 for v in self.values))
 
     def dot(self, other: "Vector") -> withNone[float]:
         """computes the dot prduct between self and other
@@ -48,8 +49,31 @@ class Vector:
     def abs2(self) -> float:
         return self.dot(self)
 
+    def normalize(self) -> "Vector":
+        return self / abs(self)
+
+    def angle(self, other: "Vector") -> float:
+        return math.acos(self.dot(other) / (abs(self) * abs(other)))
+
+    def project(self, other: "Vector") -> "Vector":
+        """project other onto self
+
+        Args:
+            other (Vector): other vector
+
+        Raises:
+            ValueError: when self.is_zero_vector == True
+
+        Returns:
+            Vector: the projection
+        """
+        if self.is_zero_vector:
+            raise ValueError("cannot project onto zero vector")
+
+        return (other.dot(self) / self.abs2()) * self
+
     def is_orthogonal(self, other: "Vector", /) -> bool:
-        return self.dot(other) == self.zero_value
+        return self.dot(other) == 0
 
     def is_parralel(self, other: "Vector") -> bool:
         if self.is_zero_vector or other.is_zero_vector:
@@ -64,12 +88,10 @@ class Vector:
             val = self[i]
             other_val = other[i]
 
-            if (val == self.zero_value and other_val != self.zero_value) or (
-                val != self.zero_value and other_val == self.zero_value
-            ):
+            if (val == 0 and other_val != 0) or (val != 0 and other_val == 0):
                 return False
 
-            if val == self.zero_value and other_val == self.zero_value:
+            if val == 0 and other_val == 0:
                 continue
 
             if factor == None:
@@ -103,6 +125,9 @@ class Vector:
 
     def __truediv__(self, other: real_number, /) -> "Vector":
         return self * (1 / other)
+
+    def __abs__(self) -> float:
+        return math.sqrt(self.abs2())
 
     def __len__(self) -> int:
         return self.length
