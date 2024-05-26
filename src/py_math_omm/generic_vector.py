@@ -1,4 +1,4 @@
-from typing import Iterable, SupportsIndex, TypeVar, Protocol, Generic, overload
+from typing import Iterable, SupportsIndex, TypeVar, Protocol, overload
 from .types import withNone
 
 T = TypeVar("T", bound="VectorElement")
@@ -15,7 +15,7 @@ class VectorElement(Protocol):
     def __repr__(self) -> str: ...
 
 
-class GenericVector(Generic[T]):
+class GenericVector[T]:
     def __init__(self, zero_value: T, *values: T) -> None:
         self.values = list(values)
         self.zero_value = zero_value
