@@ -62,7 +62,7 @@ class Quaternion(object):
         return (self.j == 0) and (self.k == 0)
 
     @property
-    def is_complex(self) -> bool:
+    def is_pure_complex(self) -> bool:
         return self.r == 0
 
     @property
