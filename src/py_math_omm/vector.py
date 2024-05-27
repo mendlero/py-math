@@ -179,7 +179,3 @@ class Vector:
 
     def __str__(self) -> str:
         return f"({", ".join(v.__str__() for v in self.values)})"
-
-
-v = Vector(1, 2, 3)
-v2 = Vector((i for i in range(5)))
