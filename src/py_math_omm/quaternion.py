@@ -132,17 +132,8 @@ class Quaternion(object):
 
     def __truediv__(self, other: quaternion_number) -> "Quaternion":
         # self / other
-        if isinstance(other, (int, float)):
-            other = float(other)
-            return self.__create_with_transformation(lambda f: f / other)
-        if isinstance(other, complex):
-            r, i = other.real, other.imag
-            square_sum = r * r + i * i
-            res_r = (r * self.r + i * self.i) / square_sum
-            res_i = (r * self.i - i * self.r) / square_sum
-            res_j = (r * self.j + i * self.k) / square_sum
-            res_k = (r * self.k - i * self.j) / square_sum
-            return Quaternion(res_r, res_i, res_j, res_k)
+        if isinstance(other, (int, float, complex)):
+            return self * (1 / other)
         if isinstance(other, Quaternion):
             return self * other.inverse()
 
@@ -162,10 +153,13 @@ class Quaternion(object):
         return (-self) + other
 
     def __rtruediv__(self, other: quaternion_number) -> "Quaternion":
-        return self.inverse() * other
+        return other * self.inverse()
 
     def __rmul__(self, other: quaternion_number) -> "Quaternion":
-        return self * other
+        if isinstance(other, (int, float, complex)):
+            return Quaternion(other) * self
+        if isinstance(other, Quaternion):
+            return other * self
 
     def __abs__(self) -> float:
         return math.sqrt(self.abs2())
